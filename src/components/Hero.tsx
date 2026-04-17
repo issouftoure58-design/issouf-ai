@@ -44,8 +44,8 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.5 }}
           className="mt-7 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed"
         >
-          Telephone, WhatsApp, chat — votre assistant IA repond, qualifie,
-          prend les rendez-vous et transfere a un humain si besoin. 24/7.
+          Agents IA sur-mesure : receptionniste vocal, chatbot WhatsApp,
+          agent email, prospection automatisee. Deployes et en production. 24/7.
         </motion.p>
 
         {/* Waveform card */}

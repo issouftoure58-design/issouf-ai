@@ -22,12 +22,12 @@ const faqs = [
     a: "Si vous depensez 500€/mois en API, l'optimisation vous fait economiser 350-400€/mois. La mission se rembourse en 1-2 mois.",
   },
   {
-    q: "Le site web est inclus avec l'IA ?",
-    a: "Le dashboard client est inclus dans les offres IA Pro et Premium. Pour un site vitrine complet, c'est une offre separee — mais je prends toute la chaine pour que vous n'ayez qu'un seul interlocuteur.",
+    q: "Combien de temps pour deployer l'IA ?",
+    a: "2-3 semaines pour un canal, 4-6 semaines pour les 3 canaux (telephone + WhatsApp + chat). Apres le call decouverte de 15 min, je vous livre un assistant operationnel.",
   },
   {
     q: "Code custom ou no-code ?",
-    a: "Code custom. React, Next.js, Node.js, TypeScript. Vous etes proprietaire du code, heberge chez vous. Pas de lock-in, pas de plateforme tierce.",
+    a: "Code custom. Node.js, OpenAI Realtime API, Twilio, WebSocket. Vous etes proprietaire du code, heberge chez vous. Pas de lock-in, pas de plateforme tierce.",
   },
 ];
 

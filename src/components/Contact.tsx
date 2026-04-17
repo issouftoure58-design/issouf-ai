@@ -85,12 +85,10 @@ export function Contact() {
                   <select id="project" name="project"
                     className="w-full px-4 py-2.5 rounded-xl glass text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-300/50 transition-all">
                     <option value="">Selectionnez...</option>
-                    <option value="ia-tel">Assistant IA telephone</option>
-                    <option value="ia-wa">Chatbot WhatsApp</option>
-                    <option value="ia-chat">Chat IA web</option>
-                    <option value="site-landing">Landing page</option>
-                    <option value="site-vitrine">Site vitrine</option>
-                    <option value="site-ecommerce">E-commerce</option>
+                    <option value="receptionniste">Agent Receptionniste (tel/WA/chat)</option>
+                    <option value="email">Agent Email (tri/reponses/relances)</option>
+                    <option value="commercial">Agent Commercial (qualification/nurturing)</option>
+                    <option value="multi">Multi-agents</option>
                     <option value="optim">Optimisation couts IA</option>
                     <option value="autre">Autre</option>
                   </select>
@@ -140,7 +138,7 @@ export function Contact() {
             <div className="pt-2">
               <p className="text-[11px] text-gray-400 uppercase tracking-[0.15em] mb-3">Technologies</p>
               <div className="flex flex-wrap gap-1.5">
-                {["React", "Next.js", "Node.js", "TypeScript", "Supabase", "Stripe", "Twilio", "OpenAI", "Claude", "Render"].map((t) => (
+                {["OpenAI Realtime", "Twilio Voice", "WhatsApp API", "Node.js", "WebSocket", "Claude", "Supabase", "TypeScript"].map((t) => (
                   <span key={t} className="text-[11px] px-2.5 py-1 rounded-full glass text-gray-500">{t}</span>
                 ))}
               </div>

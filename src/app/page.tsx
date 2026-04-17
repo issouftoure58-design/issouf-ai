@@ -3,7 +3,6 @@ import { Hero } from "@/components/Hero";
 import { Process } from "@/components/Process";
 import { AvantApres } from "@/components/AvantApres";
 import { DashboardDemo } from "@/components/DashboardDemo";
-import { Catalogue } from "@/components/Catalogue";
 import { Offres } from "@/components/Offres";
 import { Temoignages } from "@/components/Temoignages";
 import { Portfolio } from "@/components/Portfolio";
@@ -27,7 +26,6 @@ export default function Home() {
         <Process />
         <AvantApres />
         <DashboardDemo />
-        <Catalogue />
         <Offres />
         <Temoignages />
         <Portfolio />

@@ -5,7 +5,7 @@ import { FadeIn } from "./AnimatedSection";
 
 const projects = [
   {
-    label: "IA Telephone",
+    label: "Agent Receptionniste",
     title: "Assistant vocal en production",
     description:
       "L'IA decroche, parle naturellement, verifie les dispos, prend le RDV, transfere a un humain si besoin. Anti-echo, anti-barge-in, gestion des tokens.",
@@ -20,6 +20,34 @@ const projects = [
     labelGradient: "from-blue-600 to-violet-600",
   },
   {
+    label: "Agent Email",
+    title: "Tri, reponses et relances automatiques",
+    description:
+      "L'IA se connecte a la boite mail, classe les emails (demande RDV, devis, reclamation), repond avec le contexte metier, et relance automatiquement a J+3 si pas de reponse.",
+    stack: ["Gmail API", "OpenAI GPT-4", "Node.js", "Supabase"],
+    metrics: [
+      { label: "Emails traites", value: "200+/mois" },
+      { label: "Temps economise", value: "50h/mois" },
+      { label: "Taux reponse", value: "95%" },
+    ],
+    gradient: "from-emerald-500 to-cyan-500",
+    labelGradient: "from-emerald-500 to-cyan-500",
+  },
+  {
+    label: "Agent Commercial",
+    title: "Qualification et nurturing automatises",
+    description:
+      "L'IA recoit un lead, l'enrichit, envoie une sequence personnalisee email + WhatsApp sur 7-14 jours, qualifie (budget, timing, besoin) et prend RDV dans le calendrier du commercial.",
+    stack: ["Twilio SMS/WA", "OpenAI", "Google Calendar API", "Supabase"],
+    metrics: [
+      { label: "Taux qualification", value: "89%" },
+      { label: "Conversion", value: "+35%" },
+      { label: "Temps gagne", value: "2h/jour" },
+    ],
+    gradient: "from-violet-500 to-fuchsia-500",
+    labelGradient: "from-violet-600 to-fuchsia-600",
+  },
+  {
     label: "Optimisation IA",
     title: "Cout par interaction : 0.10$ → 0.01$",
     description:
@@ -30,22 +58,8 @@ const projects = [
       { label: "Avant", value: "0.10$" },
       { label: "Apres", value: "0.01$" },
     ],
-    gradient: "from-emerald-500 to-cyan-500",
-    labelGradient: "from-emerald-500 to-cyan-500",
-  },
-  {
-    label: "Plateforme complete",
-    title: "Multi-tenant, 7 types de business",
-    description:
-      "74 routes API, 87 migrations, 50 tables RLS, Stripe (abonnements, webhooks, portail), IA multi-canal. Score performance 9.0/10.",
-    stack: ["React", "Node.js", "Supabase", "Stripe", "Twilio"],
-    metrics: [
-      { label: "Routes API", value: "74" },
-      { label: "Migrations", value: "87" },
-      { label: "Performance", value: "9/10" },
-    ],
-    gradient: "from-violet-500 to-fuchsia-500",
-    labelGradient: "from-violet-600 to-fuchsia-600",
+    gradient: "from-cyan-500 to-blue-500",
+    labelGradient: "from-cyan-600 to-blue-600",
   },
 ];
 
@@ -59,7 +73,7 @@ export function Portfolio() {
             En production. Pas en maquette.
           </h2>
           <p className="mt-5 text-gray-500 max-w-lg mx-auto text-lg">
-            Chaque projet tourne avec de vrais utilisateurs, aujourd&apos;hui.
+            Chaque agent tourne avec de vrais utilisateurs, aujourd&apos;hui.
           </p>
         </FadeIn>
 
@@ -73,7 +87,6 @@ export function Portfolio() {
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               className="group glass-strong rounded-2xl hover:shadow-xl hover:shadow-violet-100/20 transition-all duration-500 overflow-hidden"
             >
-              {/* Top bar */}
               <div className={`h-[3px] bg-gradient-to-r ${p.gradient} opacity-60 group-hover:opacity-100 transition-opacity duration-500`} />
 
               <div className="p-6 sm:p-8">
@@ -85,9 +98,7 @@ export function Portfolio() {
 
                     <div className="flex flex-wrap gap-2 mt-4">
                       {p.stack.map((s) => (
-                        <span key={s} className="text-[11px] px-2.5 py-1 rounded-full glass text-gray-500">
-                          {s}
-                        </span>
+                        <span key={s} className="text-[11px] px-2.5 py-1 rounded-full glass text-gray-500">{s}</span>
                       ))}
                     </div>
 
@@ -104,7 +115,6 @@ export function Portfolio() {
                     )}
                   </div>
 
-                  {/* Metrics */}
                   <div className="flex lg:flex-col gap-6 lg:gap-4">
                     {p.metrics.map((m) => (
                       <div key={m.label} className="text-center lg:text-right">
@@ -119,17 +129,16 @@ export function Portfolio() {
           ))}
         </div>
 
-        {/* Missions */}
         <FadeIn delay={0.2} className="mt-20">
           <h3 className="text-lg font-semibold text-gray-900 text-center mb-8">Exemples de missions</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {[
-              { need: "IA telephone pour une clinique", time: "2-3 sem.", price: "3-6k€" },
+              { need: "Agent receptionniste pour une clinique", time: "2-3 sem.", price: "3-6k€" },
+              { need: "Agent email pour un cabinet d'avocats", time: "1-2 sem.", price: "1-1.5k€" },
+              { need: "Agent commercial pour agence immo", time: "2-3 sem.", price: "2-3k€" },
               { need: "Chatbot WhatsApp pour qualifier des leads", time: "2-3 sem.", price: "3-5k€" },
               { need: "Facture OpenAI qui explose", time: "3-5 jours", price: "2.5-5k€" },
-              { need: "Site vitrine premium + chat IA", time: "3-4 sem.", price: "4-7k€" },
-              { need: "Landing page avec animations", time: "1-2 sem.", price: "2-3.5k€" },
-              { need: "IA tel + WA + chat, tout connecte", time: "4-6 sem.", price: "8-12k€" },
+              { need: "Agent multi-canal complet (tel + WA + email)", time: "4-6 sem.", price: "8-12k€" },
             ].map((m) => (
               <div key={m.need} className="glass rounded-xl px-4 py-3.5 hover:shadow-md transition-all cursor-default">
                 <p className="text-[13px] text-gray-900 font-medium">&quot;{m.need}&quot;</p>
