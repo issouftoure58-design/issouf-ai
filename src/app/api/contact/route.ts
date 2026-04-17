@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = "force-dynamic";
 
 const projectLabels: Record<string, string> = {
-  "ia-tel": "Assistant IA telephone",
-  "ia-wa": "Chatbot WhatsApp",
-  "ia-chat": "Chat IA web",
-  "site-landing": "Landing page",
-  "site-vitrine": "Site vitrine",
-  "site-ecommerce": "E-commerce",
+  "receptionniste": "Agent Receptionniste (tel/WA/chat)",
+  "email": "Agent Email (tri/reponses/relances)",
+  "commercial": "Agent Commercial (qualification/nurturing)",
+  "multi": "Multi-agents",
   "optim": "Optimisation couts IA",
   "autre": "Autre",
 };
 
 export async function POST(req: Request) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { name, email, project, message } = await req.json();
 
     if (!name || !email || !message) {
