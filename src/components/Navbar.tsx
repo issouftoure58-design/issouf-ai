@@ -50,7 +50,7 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href="tel:+33974995631"
+            href="tel:+33939245651"
             className="text-[13px] font-medium px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600 text-white hover:shadow-lg hover:shadow-violet-200/50 transition-all duration-300 animate-shimmer"
           >
             Tester l&apos;IA
@@ -92,7 +92,7 @@ export function Navbar() {
                 </a>
               ))}
               <a
-                href="tel:+33974995631"
+                href="tel:+33939245651"
                 className="block mt-3 text-center text-sm font-medium px-4 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-violet-600 text-white"
               >
                 Tester l&apos;IA

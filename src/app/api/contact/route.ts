@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     const projectLabel = projectLabels[project] || project || "Non precise";
 
     // 1. Email pour Issouf (notification)
+    // TODO: changer from/to quand issouf.ai sera verifie sur Resend
     await resend.emails.send({
       from: "Issouf.ai <noreply@nexus-ai-saas.com>",
       to: "contact@nexus-ai-saas.com",
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
           <p>Bonjour ${name},</p>
           <p>Merci pour votre message. J'ai bien recu votre demande concernant : <strong>${projectLabel}</strong>.</p>
           <p>Je reviens vers vous sous <strong>24 heures</strong> avec un premier retour et, si pertinent, une proposition adaptee a votre besoin.</p>
-          <p>En attendant, vous pouvez tester mon IA en direct en appelant le <a href="tel:+33974995631" style="color: #2563eb; text-decoration: none; font-weight: 600;">+33 9 74 99 56 31</a> — l'assistant repond 24/7.</p>
+          <p>En attendant, vous pouvez tester mon IA en direct en appelant le <a href="tel:+33939245651" style="color: #2563eb; text-decoration: none; font-weight: 600;">+33 9 39 24 56 51</a> — l'assistant repond 24/7.</p>
           <br />
           <p>A tres vite,</p>
           <p><strong>Issouf Toure</strong><br/>

@@ -7,7 +7,7 @@ import { FadeIn } from "./AnimatedSection";
 const faqs = [
   {
     q: "L'IA peut vraiment prendre des RDV par telephone ?",
-    a: "Oui, en production. Appelez le +33 9 74 99 56 31, l'IA vous repond, verifie les disponibilites et prend le rendez-vous. Pas une maquette — ca tourne maintenant.",
+    a: "Oui, en production. Appelez le +33 9 39 24 56 51, l'IA vous repond, verifie les disponibilites et prend le rendez-vous. Pas une maquette — ca tourne maintenant.",
   },
   {
     q: "Quelle difference avec ChatGPT ou Voiceflow ?",

@@ -85,7 +85,7 @@ export function Hero() {
           className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
-            href="tel:+33974995631"
+            href="tel:+33939245651"
             className="group relative flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600 text-white font-semibold text-base hover:shadow-xl hover:shadow-violet-200/40 transition-all duration-300 animate-glow animate-shimmer"
           >
             <svg className="w-5 h-5 transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -107,8 +107,8 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 1.1 }}
           className="mt-4 text-gray-400 text-sm"
         >
-          <a href="tel:+33974995631" className="hover:text-gray-600 transition-colors font-mono tracking-wide">
-            +33 9 74 99 56 31
+          <a href="tel:+33939245651" className="hover:text-gray-600 transition-colors font-mono tracking-wide">
+            +33 9 39 24 56 51
           </a>
           {" "}— Gratuit. L&apos;IA repond en direct.
         </motion.p>

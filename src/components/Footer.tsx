@@ -8,7 +8,7 @@ export function Footer() {
           <span className="text-[13px] font-medium bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">.ai</span>
         </div>
         <div className="flex items-center gap-6">
-          <a href="tel:+33974995631" className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors font-mono">+33 9 74 99 56 31</a>
+          <a href="tel:+33939245651" className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors font-mono">+33 9 39 24 56 51</a>
           <a href="mailto:contact@nexus-ai-saas.com" className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors">contact@nexus-ai-saas.com</a>
         </div>
       </div>

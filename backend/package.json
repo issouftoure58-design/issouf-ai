@@ -1,0 +1,17 @@
+{
+  "name": "issouf-ai-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend voix Issouf.ai — IA telephone demo freelance",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "twilio": "^5.4.3",
+    "ws": "^8.18.0"
+  }
+}

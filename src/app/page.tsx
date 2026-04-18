@@ -6,6 +6,7 @@ import { DashboardDemo } from "@/components/DashboardDemo";
 import { Offres } from "@/components/Offres";
 import { Temoignages } from "@/components/Temoignages";
 import { Portfolio } from "@/components/Portfolio";
+import { Catalogue } from "@/components/Catalogue";
 import { FAQ } from "@/components/FAQ";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
@@ -29,6 +30,7 @@ export default function Home() {
         <Offres />
         <Temoignages />
         <Portfolio />
+        <Catalogue />
         <FAQ />
         <Contact />
         <Footer />

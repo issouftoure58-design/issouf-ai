@@ -111,26 +111,26 @@ export function Contact() {
             <div className="glass-strong rounded-2xl p-5">
               <p className="text-[13px] font-medium text-gray-900 mb-1">Tester l&apos;IA en direct</p>
               <p className="text-[12px] text-gray-500 mb-3">Appelez pour parler avec l&apos;assistant, sans engagement.</p>
-              <a href="tel:+33974995631"
+              <a href="tel:+33939245651"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-white text-[13px] font-medium hover:shadow-lg hover:shadow-violet-200/40 transition-all">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                +33 9 74 99 56 31
+                +33 9 39 24 56 51
               </a>
             </div>
 
-            <a href="mailto:contact@nexus-ai-saas.com" className="block glass-strong rounded-2xl p-5 hover:shadow-md transition-all group">
+            <a href="mailto:contact@issouf.ai" className="block glass-strong rounded-2xl p-5 hover:shadow-md transition-all group">
               <p className="text-[13px] font-medium text-gray-900 group-hover:text-violet-600 transition-colors">Email</p>
-              <p className="text-[12px] text-gray-500 mt-0.5">contact@nexus-ai-saas.com</p>
+              <p className="text-[12px] text-gray-500 mt-0.5">contact@issouf.ai</p>
             </a>
 
-            <a href="https://www.malt.fr" target="_blank" rel="noopener noreferrer" className="block glass-strong rounded-2xl p-5 hover:shadow-md transition-all group">
+            <a href="https://www.malt.fr/profile/issouftoure" target="_blank" rel="noopener noreferrer" className="block glass-strong rounded-2xl p-5 hover:shadow-md transition-all group">
               <p className="text-[13px] font-medium text-gray-900 group-hover:text-violet-600 transition-colors">Malt</p>
               <p className="text-[12px] text-gray-500 mt-0.5">Profil freelance</p>
             </a>
 
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="block glass-strong rounded-2xl p-5 hover:shadow-md transition-all group">
+            <a href="https://www.linkedin.com/in/issouf-toure" target="_blank" rel="noopener noreferrer" className="block glass-strong rounded-2xl p-5 hover:shadow-md transition-all group">
               <p className="text-[13px] font-medium text-gray-900 group-hover:text-violet-600 transition-colors">LinkedIn</p>
               <p className="text-[12px] text-gray-500 mt-0.5">Issouf Toure</p>
             </a>

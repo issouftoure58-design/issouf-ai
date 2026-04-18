@@ -15,7 +15,7 @@ const projects = [
       { label: "Latence", value: "<2s" },
       { label: "Canaux", value: "3" },
     ],
-    cta: { label: "Appelez pour tester", href: "tel:+33974995631" },
+    cta: { label: "Appelez pour tester", href: "tel:+33939245651" },
     gradient: "from-blue-500 to-violet-500",
     labelGradient: "from-blue-600 to-violet-600",
   },
