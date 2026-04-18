@@ -22,6 +22,17 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/twilio', twilioRoutes);
 
+// Root — info page
+app.get('/', (req, res) => {
+  res.json({
+    service: 'Issouf.ai — Voice AI Backend',
+    status: 'running',
+    phone: '+33 9 39 24 56 51',
+    site: 'https://issouf.ai',
+    uptime: Math.round(process.uptime()),
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({
