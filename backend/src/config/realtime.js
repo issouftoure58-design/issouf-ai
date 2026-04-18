@@ -23,7 +23,7 @@ export const REALTIME_CONFIG = {
     silence_duration_ms: 1000,  // 1s de silence avant reponse (evite interruptions)
   },
   temperature: 0.6,
-  max_response_output_tokens: 150,  // 2 phrases = ~50-80 tokens, 150 suffit largement
+  max_response_output_tokens: 4096,  // Audio = ~50 tokens/sec, 2 phrases ~10s = ~500 tokens
 };
 
 // Timeouts silence (utilises par realtimeVoiceHandler)
