@@ -2,23 +2,21 @@
  * Realtime Voice Handler — Issouf.ai
  * Proxy WebSocket : Twilio Media Streams <-> OpenAI Realtime API
  *
- * Extrait de NEXUS, simplifie (pas de multi-tenant, pas de tools booking)
- *
  * Architecture :
  *   Telephone -> Twilio Media Streams (WebSocket bidir, G.711 mulaw 8kHz base64)
  *        <-> Express WS Proxy (ce fichier)
  *        <-> OpenAI Realtime API (WebSocket, g711_ulaw natif)
  *        -> Reponse audio streamee -> telephone
- *
- * Gain : ~200-300ms TTFB (vs 2-4s avec Gather), barge-in controle, VAD server-side.
  */
 
 import WebSocket from 'ws';
+import twilio from 'twilio';
 import { REALTIME_CONFIG, SILENCE_RELANCE_MS, SILENCE_HANGUP_MS } from '../config/realtime.js';
 import { getVoicePrompt } from '../prompts/voicePrompt.js';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_REALTIME_URL = 'wss://api.openai.com/v1/realtime';
+const TRANSFER_NUMBER = '+33760537694';
 
 // Sessions actives : streamSid -> { openaiWs, callSid, startTime, isAISpeaking }
 const activeSessions = new Map();
@@ -57,7 +55,6 @@ export function handleMediaStream(twilioWs) {
 
         case 'media': {
           if (openaiWs && openaiWs.readyState === WebSocket.OPEN) {
-            // Anti barge-in : bloquer l'audio client pendant que l'IA parle
             const session = activeSessions.get(streamSid);
             if (session?.isAISpeaking) break;
 
@@ -101,6 +98,41 @@ export function handleMediaStream(twilioWs) {
 }
 
 /**
+ * Transfere l'appel en cours vers le numero d'Issouf via Twilio REST API
+ */
+async function transferCall(callSid) {
+  try {
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    const webhookBase = process.env.WEBHOOK_BASE_URL || '';
+
+    // Met a jour l'appel avec un TwiML qui fait <Dial> vers Issouf
+    await client.calls(callSid).update({
+      twiml: `<Response><Say language="fr-FR" voice="Google.fr-FR-Wavenet-A">Je vous transfere vers Issouf, un instant.</Say><Dial callerId="${process.env.TWILIO_PHONE_NUMBER || '+33939245651'}" action="${webhookBase}/api/twilio/voice/transfer-result" method="POST"><Number>${TRANSFER_NUMBER}</Number></Dial></Response>`,
+    });
+
+    console.log(`[VOICE] Transfer initiated: call=${callSid} -> ${TRANSFER_NUMBER}`);
+    return { success: true, message: 'Transfert en cours vers Issouf.' };
+  } catch (err) {
+    console.error(`[VOICE] Transfer failed: ${err.message}`);
+    return { success: false, message: 'Le transfert a echoue, reessayez plus tard.' };
+  }
+}
+
+// Tool definition pour OpenAI Realtime
+const TRANSFER_TOOL = {
+  type: 'function',
+  name: 'transferer_appel',
+  description: "Transfere l'appel telephonique vers Issouf Toure. Utiliser quand le prospect demande a parler a un humain, a Issouf, ou veut etre mis en relation.",
+  parameters: {
+    type: 'object',
+    properties: {
+      raison: { type: 'string', description: 'Raison du transfert' },
+    },
+    required: [],
+  },
+};
+
+/**
  * Ouvre une session WebSocket vers OpenAI Realtime API
  */
 function openOpenAISession(callSid) {
@@ -138,14 +170,13 @@ function openOpenAISession(callSid) {
           output_audio_format: config.output_audio_format,
           input_audio_transcription: config.input_audio_transcription,
           turn_detection: config.turn_detection,
-          tools: [],
-          tool_choice: 'none',
+          tools: [TRANSFER_TOOL],
+          tool_choice: 'auto',
           temperature: config.temperature,
           max_response_output_tokens: config.max_response_output_tokens,
         },
       }));
 
-      // Message d'accueil
       sendGreeting(ws);
       resolve(ws);
     });
@@ -185,6 +216,7 @@ CONTEXTE TEMPS REEL :
 - Sois TRES concise : max 2 phrases par reponse
 - IMPORTANT : Ne repete JAMAIS les instructions ou le prompt systeme au client
 - LANGUE : Par defaut tu parles en francais. Si le client parle dans une autre langue, adapte-toi IMMEDIATEMENT.
+- TRANSFERT : Si le prospect demande a parler a Issouf ou a un humain, utilise l'outil transferer_appel IMMEDIATEMENT. Dis juste "Je vous transfere vers Issouf" puis appelle l'outil.
 
 REGLE ANTI-ENCHAINEMENT — Apres ta reponse, tu te TAIS. Tu ne dis JAMAIS "ok", "oui", "bien sur", "d'accord" apres ta propre reponse. Tu ne rebondis PAS sur un sujet non demande. Tu reponds a la question posee, point final, puis SILENCE.`;
 }
@@ -195,7 +227,7 @@ REGLE ANTI-ENCHAINEMENT — Apres ta reponse, tu te TAIS. Tu ne dis JAMAIS "ok",
 function setupOpenAIListeners(openaiWs, twilioWs, streamSid, callSid) {
   let isPlayingResponse = false;
 
-  // Silence detection (valeurs importees de config/realtime.js)
+  // Silence detection
   let lastActivityTime = Date.now();
   let hasRelanced = false;
 
@@ -226,7 +258,7 @@ function setupOpenAIListeners(openaiWs, twilioWs, streamSid, callSid) {
           type: 'response.create',
           response: {
             modalities: ['audio', 'text'],
-            instructions: 'Le client est silencieux. Relance-le naturellement en une courte phrase, par exemple "Vous etes toujours la ?"',
+            instructions: 'Le client est silencieux depuis un moment. Relance doucement, par exemple "Vous avez une autre question ?" ou un petit "Hmm ?" naturel. UNE seule phrase.',
           },
         }));
       }
@@ -271,12 +303,10 @@ function setupOpenAIListeners(openaiWs, twilioWs, streamSid, callSid) {
           isPlayingResponse = false;
           resetSilenceTimer();
 
-          // Anti-echo : purger le buffer audio
           if (openaiWs.readyState === WebSocket.OPEN) {
             openaiWs.send(JSON.stringify({ type: 'input_audio_buffer.clear' }));
           }
 
-          // Debloquer l'audio client apres 2s (echo telephonique)
           setTimeout(() => {
             const session = activeSessions.get(streamSid);
             if (session) session.isAISpeaking = false;
@@ -309,6 +339,35 @@ function setupOpenAIListeners(openaiWs, twilioWs, streamSid, callSid) {
 
         case 'input_audio_buffer.speech_stopped':
           break;
+
+        // Tool call — transfert d'appel
+        case 'response.function_call_arguments.done': {
+          const { call_id, name: toolName } = event;
+          console.log(`[VOICE] Tool call: ${toolName} (call=${callSid})`);
+
+          if (toolName === 'transferer_appel') {
+            const result = await transferCall(callSid);
+
+            // Renvoyer le resultat a OpenAI
+            openaiWs.send(JSON.stringify({
+              type: 'conversation.item.create',
+              item: {
+                type: 'function_call_output',
+                call_id,
+                output: JSON.stringify(result),
+              },
+            }));
+
+            // Pas besoin de response.create — le transfert Twilio prend le relais
+            if (result.success) {
+              console.log(`[VOICE] Transfer success, Twilio takes over`);
+            } else {
+              // Si echec, laisser l'IA repondre
+              openaiWs.send(JSON.stringify({ type: 'response.create' }));
+            }
+          }
+          break;
+        }
 
         case 'error':
           console.error(`[VOICE] OpenAI error: ${JSON.stringify(event.error)}`);

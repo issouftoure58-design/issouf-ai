@@ -46,4 +46,24 @@ router.post('/voice/status', (req, res) => {
   res.sendStatus(200);
 });
 
+/**
+ * POST /api/twilio/voice/transfer-result — Resultat du transfert (Dial action)
+ */
+router.post('/voice/transfer-result', (req, res) => {
+  const { DialCallStatus, CallSid } = req.body;
+  console.log(`[TWILIO] Transfer result: sid=${CallSid} status=${DialCallStatus}`);
+
+  const twiml = new VoiceResponse();
+
+  if (DialCallStatus !== 'completed') {
+    // Issouf n'a pas decroche — message vocal
+    twiml.say({ language: 'fr-FR', voice: 'Google.fr-FR-Wavenet-A' },
+      'Issouf n\'est pas disponible pour le moment. Vous pouvez le contacter par email a contact at issouf point A I. Merci et a bientot !');
+  }
+
+  twiml.hangup();
+  res.type('text/xml');
+  res.send(twiml.toString());
+});
+
 export default router;
