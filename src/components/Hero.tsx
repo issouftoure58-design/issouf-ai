@@ -113,6 +113,32 @@ export function Hero() {
           {" "}— Gratuit. L&apos;IA repond en direct.
         </motion.p>
 
+        {/* Exemples de questions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+          className="mt-8 max-w-2xl mx-auto"
+        >
+          <p className="text-[12px] text-gray-400 uppercase tracking-[0.15em] mb-3">Testez en profondeur — demandez-lui par exemple :</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              "Quels services tu proposes ?",
+              "Combien ca coute ?",
+              "Tu peux vraiment prendre des RDV ?",
+              "Passe-moi Issouf",
+              "Tu geres aussi WhatsApp ?",
+              "Comment ca marche l'installation ?",
+              "C'est quoi les credits IA ?",
+              "Tu parles anglais ?",
+            ].map((q) => (
+              <span key={q} className="text-[12px] px-3 py-1.5 rounded-full glass text-gray-500 hover:text-gray-700 hover:shadow-sm transition-all cursor-default">
+                &quot;{q}&quot;
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
