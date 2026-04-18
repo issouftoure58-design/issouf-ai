@@ -14,7 +14,7 @@
  */
 
 import WebSocket from 'ws';
-import { REALTIME_CONFIG } from '../config/realtime.js';
+import { REALTIME_CONFIG, SILENCE_RELANCE_MS, SILENCE_HANGUP_MS } from '../config/realtime.js';
 import { getVoicePrompt } from '../prompts/voicePrompt.js';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -195,9 +195,7 @@ REGLE ANTI-ENCHAINEMENT — Apres ta reponse, tu te TAIS. Tu ne dis JAMAIS "ok",
 function setupOpenAIListeners(openaiWs, twilioWs, streamSid, callSid) {
   let isPlayingResponse = false;
 
-  // Silence detection
-  const SILENCE_RELANCE_MS = 12000;
-  const SILENCE_HANGUP_MS = 25000;
+  // Silence detection (valeurs importees de config/realtime.js)
   let lastActivityTime = Date.now();
   let hasRelanced = false;
 

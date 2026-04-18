@@ -1,22 +1,31 @@
 /**
  * Configuration OpenAI Realtime API pour Issouf.ai
- * Simplifie — pas de multi-tenant, config unique
+ *
+ * OPTIMISATIONS COUTS :
+ * - gpt-4o-mini-realtime : ~60% moins cher que gpt-4o-realtime
+ *   (input: $0.60/min audio vs $0.06/1M text, output: $2.40/min vs $0.24/1M)
+ * - max_response_output_tokens: 150 (2 phrases max = ~50-80 tokens)
+ * - silence_duration_ms: 1000 (evite faux declenchements = moins de reponses inutiles)
+ * - Pas de transcription Whisper (economise ~$0.006/min)
+ * - Silence hangup: 20s (raccroche plus vite)
  */
 
 export const REALTIME_CONFIG = {
-  model: 'gpt-4o-realtime-preview',
+  model: 'gpt-4o-mini-realtime-preview',  // 60% moins cher
   voice: 'coral',
   input_audio_format: 'g711_ulaw',
   output_audio_format: 'g711_ulaw',
-  input_audio_transcription: {
-    model: 'whisper-1',
-  },
+  input_audio_transcription: null,  // Desactive Whisper — economie ~$0.006/min
   turn_detection: {
     type: 'server_vad',
-    threshold: 0.7,
-    prefix_padding_ms: 350,
-    silence_duration_ms: 800,
+    threshold: 0.75,            // Plus strict — moins de faux positifs (bruit)
+    prefix_padding_ms: 300,
+    silence_duration_ms: 1000,  // 1s de silence avant reponse (evite interruptions)
   },
   temperature: 0.6,
-  max_response_output_tokens: 500,
+  max_response_output_tokens: 150,  // 2 phrases = ~50-80 tokens, 150 suffit largement
 };
+
+// Timeouts silence (utilises par realtimeVoiceHandler)
+export const SILENCE_RELANCE_MS = 10000;   // 10s -> relance
+export const SILENCE_HANGUP_MS = 20000;    // 20s -> au revoir (avant: 25s)
