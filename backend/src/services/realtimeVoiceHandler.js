@@ -166,7 +166,7 @@ function sendGreeting(openaiWs) {
     type: 'response.create',
     response: {
       modalities: ['audio', 'text'],
-      instructions: `Dis exactement ceci pour l'accueil : "Bonjour ! Issouf point ai, je suis Aria, l'assistante IA d'Issouf. Dites-moi tout !"`,
+      instructions: `Dis exactement ceci pour l'accueil : "Bonjour ! Issouf point aye aille, je suis Aria, l'assistante I.A. d'Issouf. Dites-moi tout !"`,
     },
   }));
 }
