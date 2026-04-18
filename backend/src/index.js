@@ -1,16 +1,20 @@
 /**
- * Issouf.ai — Backend voix
- * Serveur Express + WebSocket pour la demo IA telephone
+ * Issouf.ai — Backend voix + Landing statique
+ * Serveur Express : fichiers statiques (Next.js export) + API + WebSocket
  */
 
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import twilioRoutes from './routes/twilio.js';
+import contactRoute from './routes/contact.js';
 import { handleMediaStream, getRealtimeStats, closeAllSessions } from './services/realtimeVoiceHandler.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -19,25 +23,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// API routes (AVANT les fichiers statiques)
 app.use('/api/twilio', twilioRoutes);
-
-// Root — info page
-app.get('/', (req, res) => {
-  res.json({
-    service: 'Issouf.ai — Voice AI Backend',
-    status: 'running',
-    phone: '+33 9 39 24 56 51',
-    site: 'https://issouf.ai',
-    uptime: Math.round(process.uptime()),
-  });
-});
+app.use('/api', contactRoute);
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    service: 'issouf-ai-voice',
+    service: 'issouf-ai',
     uptime: Math.round(process.uptime()),
     activeSessions: getRealtimeStats().activeSessions,
   });
@@ -46,6 +40,15 @@ app.get('/health', (req, res) => {
 // Stats
 app.get('/api/stats', (req, res) => {
   res.json(getRealtimeStats());
+});
+
+// Fichiers statiques Next.js (out/)
+const staticDir = path.resolve(__dirname, '../../out');
+app.use(express.static(staticDir));
+
+// SPA fallback — renvoie index.html pour toutes les routes non-API
+app.get('*', (req, res) => {
+  res.sendFile(path.join(staticDir, 'index.html'));
 });
 
 // HTTP server
@@ -76,10 +79,11 @@ process.on('SIGINT', () => {
 server.listen(PORT, () => {
   console.log(`
 ╔═══════════════════════════════════════════╗
-║  Issouf.ai Voice Backend                 ║
+║  Issouf.ai                               ║
 ║  Port: ${PORT}                              ║
+║  Landing: static (out/)                   ║
+║  API: /api/*                              ║
 ║  WebSocket: /media-stream                 ║
-║  Health: /health                          ║
 ╚═══════════════════════════════════════════╝
   `);
 

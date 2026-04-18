@@ -1,33 +1,37 @@
-import { NextResponse } from "next/server";
-import { Resend } from "resend";
+/**
+ * Route Contact — Issouf.ai
+ * Formulaire de contact (envoi email via Resend)
+ */
 
-export const dynamic = "force-dynamic";
+import { Router } from 'express';
+import { Resend } from 'resend';
 
-const projectLabels: Record<string, string> = {
-  "receptionniste": "Agent Receptionniste (tel/WA/chat)",
-  "email": "Agent Email (tri/reponses/relances)",
-  "commercial": "Agent Commercial (qualification/nurturing)",
-  "multi": "Multi-agents",
-  "optim": "Optimisation couts IA",
-  "autre": "Autre",
+const router = Router();
+
+const projectLabels = {
+  receptionniste: 'Agent Receptionniste (tel/WA/chat)',
+  email: 'Agent Email (tri/reponses/relances)',
+  commercial: 'Agent Commercial (qualification/nurturing)',
+  multi: 'Multi-agents',
+  optim: 'Optimisation couts IA',
+  autre: 'Autre',
 };
 
-export async function POST(req: Request) {
+router.post('/contact', async (req, res) => {
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { name, email, project, message } = await req.json();
+    const { name, email, project, message } = req.body;
 
     if (!name || !email || !message) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+      return res.status(400).json({ error: 'Champs requis manquants' });
     }
 
-    const projectLabel = projectLabels[project] || project || "Non precise";
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const projectLabel = projectLabels[project] || project || 'Non precise';
 
-    // 1. Email pour Issouf (notification)
-    // TODO: changer from/to quand issouf.ai sera verifie sur Resend
+    // Email pour Issouf
     await resend.emails.send({
-      from: "Issouf.ai <noreply@nexus-ai-saas.com>",
-      to: "contact@nexus-ai-saas.com",
+      from: 'Issouf.ai <noreply@nexus-ai-saas.com>',
+      to: 'contact@nexus-ai-saas.com',
       replyTo: email,
       subject: `[issouf.ai] Nouvelle demande de ${name}`,
       html: `
@@ -37,16 +41,16 @@ export async function POST(req: Request) {
         <p><strong>Type de projet :</strong> ${projectLabel}</p>
         <hr />
         <p><strong>Message :</strong></p>
-        <p>${message.replace(/\n/g, "<br>")}</p>
+        <p>${message.replace(/\n/g, '<br>')}</p>
       `,
     });
 
-    // 2. Email de confirmation pour le prospect
+    // Email de confirmation pour le prospect
     await resend.emails.send({
-      from: "Issouf Toure <noreply@nexus-ai-saas.com>",
+      from: 'Issouf Toure <noreply@nexus-ai-saas.com>',
       to: email,
-      replyTo: "contact@nexus-ai-saas.com",
-      subject: "Bien recu ! Je reviens vers vous sous 24h",
+      replyTo: 'contact@nexus-ai-saas.com',
+      subject: 'Bien recu ! Je reviens vers vous sous 24h',
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
           <p>Bonjour ${name},</p>
@@ -62,9 +66,11 @@ export async function POST(req: Request) {
       `,
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Resend error:", error);
-    return NextResponse.json({ error: "Erreur d'envoi" }, { status: 500 });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('[CONTACT] Error:', err.message);
+    res.status(500).json({ error: "Erreur d'envoi" });
   }
-}
+});
+
+export default router;
