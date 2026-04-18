@@ -12,7 +12,7 @@
 
 export const REALTIME_CONFIG = {
   model: 'gpt-4o-mini-realtime-preview',  // 60% moins cher
-  voice: 'coral',
+  voice: 'shimmer',  // Plus naturelle et chaleureuse que coral
   input_audio_format: 'g711_ulaw',
   output_audio_format: 'g711_ulaw',
   input_audio_transcription: null,  // Desactive Whisper — economie ~$0.006/min
