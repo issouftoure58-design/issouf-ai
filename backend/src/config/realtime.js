@@ -27,5 +27,5 @@ export const REALTIME_CONFIG = {
 };
 
 // Timeouts silence (utilises par realtimeVoiceHandler)
-export const SILENCE_RELANCE_MS = 10000;   // 10s -> relance
-export const SILENCE_HANGUP_MS = 20000;    // 20s -> au revoir (avant: 25s)
+export const SILENCE_RELANCE_MS = 18000;   // 18s -> relance (laisse le temps de reflechir)
+export const SILENCE_HANGUP_MS = 35000;    // 35s -> au revoir
