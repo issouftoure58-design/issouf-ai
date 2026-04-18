@@ -98,19 +98,23 @@ export function handleMediaStream(twilioWs) {
 }
 
 /**
- * Transfere l'appel en cours vers le numero d'Issouf via Twilio REST API
+ * Transfere l'appel vers Issouf avec whisper (annonce avant de connecter)
+ * Flow : prospect attend -> Issouf decroche -> entend le whisper -> appuie 1 ou raccroche
  */
-async function transferCall(callSid) {
+async function transferCall(callSid, raison = '') {
   try {
     const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
     const webhookBase = process.env.WEBHOOK_BASE_URL || '';
+    const callerId = process.env.TWILIO_PHONE_NUMBER || '+33939245651';
 
-    // Met a jour l'appel avec un TwiML qui fait <Dial> vers Issouf
+    // Encode la raison dans l'URL du whisper
+    const whisperUrl = `${webhookBase}/api/twilio/voice/whisper?raison=${encodeURIComponent(raison)}`;
+
     await client.calls(callSid).update({
-      twiml: `<Response><Say language="fr-FR" voice="Google.fr-FR-Wavenet-A">Je vous transfere vers Issouf, un instant.</Say><Dial callerId="${process.env.TWILIO_PHONE_NUMBER || '+33939245651'}" action="${webhookBase}/api/twilio/voice/transfer-result" method="POST"><Number>${TRANSFER_NUMBER}</Number></Dial></Response>`,
+      twiml: `<Response><Say language="fr-FR" voice="Google.fr-FR-Wavenet-A">Je vous mets en relation avec Issouf, un instant s'il vous plait.</Say><Dial callerId="${callerId}" timeout="25" action="${webhookBase}/api/twilio/voice/transfer-result" method="POST"><Number url="${whisperUrl}" method="POST">${TRANSFER_NUMBER}</Number></Dial></Response>`,
     });
 
-    console.log(`[VOICE] Transfer initiated: call=${callSid} -> ${TRANSFER_NUMBER}`);
+    console.log(`[VOICE] Transfer initiated: call=${callSid} -> ${TRANSFER_NUMBER} (raison: ${raison})`);
     return { success: true, message: 'Transfert en cours vers Issouf.' };
   } catch (err) {
     console.error(`[VOICE] Transfer failed: ${err.message}`);
@@ -342,11 +346,13 @@ function setupOpenAIListeners(openaiWs, twilioWs, streamSid, callSid) {
 
         // Tool call — transfert d'appel
         case 'response.function_call_arguments.done': {
-          const { call_id, name: toolName } = event;
+          const { call_id, name: toolName, arguments: argsJson } = event;
           console.log(`[VOICE] Tool call: ${toolName} (call=${callSid})`);
 
           if (toolName === 'transferer_appel') {
-            const result = await transferCall(callSid);
+            let toolArgs = {};
+            try { toolArgs = JSON.parse(argsJson); } catch {}
+            const result = await transferCall(callSid, toolArgs.raison || '');
 
             // Renvoyer le resultat a OpenAI
             openaiWs.send(JSON.stringify({
